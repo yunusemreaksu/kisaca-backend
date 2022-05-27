@@ -1,10 +1,12 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+
+const mainRoutes = require("./routes/main-routes");
+
+//const PORT = process.env.KISACA_APP_API_URL || 8080;
 
 const app = express();
-const PORT = process.env.KISACA_APP_API_URL || 8080
 
-app.use("/main", (req, res, next) => {
-  res.send("<p>Test</p>");
-});
+app.use("/api/main", mainRoutes);
 
 app.listen(8080);

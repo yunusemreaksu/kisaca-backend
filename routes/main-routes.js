@@ -21,7 +21,12 @@ router.get("/:nid", (req, res, next) => {
   const news = DUMMY_NEWS.find((n) => {
     return n.id === newsId;
   });
-  res.json({ news: news});
+  if (!news) {
+    const error = new Error("Sayfa görüntülenemedi.");
+    error.code = 404;
+    return next(error);
+  }
+  res.json({ news: news });
 });
 
 module.exports = router;

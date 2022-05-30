@@ -1,5 +1,7 @@
 const express = require("express");
 
+const HttpError = require("../models/http-error");
+
 const router = express.Router();
 
 const DUMMY_NEWS = [
@@ -22,9 +24,7 @@ router.get("/:nid", (req, res, next) => {
     return n.id === newsId;
   });
   if (!news) {
-    const error = new Error("Sayfa görüntülenemedi.");
-    error.code = 404;
-    return next(error);
+    return next(new HttpError("Sayfa görüntülenemedi.", 404));
   }
   res.json({ news: news });
 });

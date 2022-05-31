@@ -1,10 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const HttpError = require("./models/http-error")
+const HttpError = require("./models/http-error");
 
 const mainRoutes = require("./routes/main-routes");
-
+const usersRoutes = require("./routes/users-routes");
 const commentsRoutes = require("./routes/comments-routes");
 
 //const PORT = process.env.KISACA_APP_API_URL || 8080;
@@ -14,13 +14,13 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use("/api/main", mainRoutes);
-
+app.use("/api/users", usersRoutes);
 app.use("/api/main/comments", commentsRoutes);
 
 app.use((req, res, next) => {
-  const error = new HttpError("Could not find this route!", 404)
-  throw error
-})
+  const error = new HttpError("Could not find this route!", 404);
+  throw error;
+});
 
 app.use((error, req, res, next) => {
   if (res.headerSent) {

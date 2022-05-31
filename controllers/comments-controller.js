@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require("uuid");
+
 const DUMMY_COMMENTS = [
   {
     id: "c1",
@@ -16,7 +18,7 @@ const DUMMY_COMMENTS = [
 const createComment = (req, res, next) => {
   const { id, user, commentText, time } = req.body;
   const createdComment = {
-    id: id,
+    id: uuidv4(),
     user: user,
     commentText: commentText,
     time: time,

@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const HttpError = require("./models/http-error")
+
 const mainRoutes = require("./routes/main-routes");
 
 const commentsRoutes = require("./routes/comments-routes");
@@ -14,6 +16,11 @@ app.use(bodyParser.json());
 app.use("/api/main", mainRoutes);
 
 app.use("/api/main/comments", commentsRoutes);
+
+app.use((req, res, next) => {
+  const error = new HttpError("Could not find this route!", 404)
+  throw error
+})
 
 app.use((error, req, res, next) => {
   if (res.headerSent) {

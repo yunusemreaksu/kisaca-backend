@@ -26,7 +26,7 @@ const signup = (req, res, next) => {
 
   const hasUser = DUMMY_USERS.find((u) => u.email === email);
   if (hasUser) {
-    throw new HttpError("Bu e-mail ile zaten bir hesap oluşturulmuş!");
+    throw new HttpError("Bu e-mail ile zaten bir hesap oluşturulmuş!", 422);
   }
 
   const createdUser = {

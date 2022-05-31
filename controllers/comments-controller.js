@@ -20,7 +20,7 @@ const DUMMY_COMMENTS = [
 const createComment = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError("Geçersiz girdi!", 422)
+    throw new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422);
   }
 
   const { id, user, commentText, time } = req.body;

@@ -1,13 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 const HttpError = require("./models/http-error");
 
 const mainRoutes = require("./routes/main-routes");
 const usersRoutes = require("./routes/users-routes");
 const commentsRoutes = require("./routes/comments-routes");
-
-//const PORT = process.env.KISACA_APP_API_URL || 8080;
 
 const app = express();
 
@@ -30,4 +31,4 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "Bilinmeyen bir hata oluştu." });
 });
 
-app.listen(8080);
+app.listen(process.env.PORT);

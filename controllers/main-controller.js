@@ -3,12 +3,14 @@ const HttpError = require("../models/http-error");
 const DUMMY_NEWS = [
   {
     id: "n1",
-    date: "27.05.2022 15:01",
+    date: "27.05.2022",
+    time: "15:01",
     text: "Lorem ipsum",
   },
   {
     id: "n2",
-    date: "27.05.2022 16:00",
+    date: "27.05.2022",
+    time: "16:30",
     text: "Lorem ipsum dolor sit amet",
   },
 ];

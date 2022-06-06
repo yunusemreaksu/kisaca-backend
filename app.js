@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -31,4 +32,10 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "Bilinmeyen bir hata oluştu." });
 });
 
-app.listen(process.env.PORT);
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => {
+    app.listen(process.env.PORT);
+  })
+  .catch((err) => console.log(err));
+// app.listen(process.env.PORT);

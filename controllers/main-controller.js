@@ -1,19 +1,47 @@
+const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
+const News = require("../models/news");
 
 const DUMMY_NEWS = [
   {
     id: "n1",
     date: "27.05.2022",
     time: "15:01",
-    text: "Lorem ipsum",
+    newsText: "Lorem ipsum",
   },
   {
     id: "n2",
     date: "27.05.2022",
     time: "16:30",
-    text: "Lorem ipsum dolor sit amet",
+    newsText: "Lorem ipsum dolor sit amet",
   },
 ];
+
+const createNews = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422);
+  }
+
+  const { date, time, newsText } = req.body;
+  const createdNews = new News({
+    date: date,
+    time: time,
+    newsText: newsText,
+  });
+
+  try {
+    await createdNews.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Yeni haber oluşturulurken bir hata oluştu!",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ news: createNews });
+};
 
 const getNewsById = (req, res, next) => {
   const newsId = req.params.nid; //nid: news id
@@ -27,3 +55,4 @@ const getNewsById = (req, res, next) => {
 };
 
 exports.getNewsById = getNewsById;
+exports.createNews = createNews;

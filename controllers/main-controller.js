@@ -20,7 +20,7 @@ const DUMMY_NEWS = [
 const createNews = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422);
+    return next(new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422));
   }
 
   const { date, time, newsText } = req.body;

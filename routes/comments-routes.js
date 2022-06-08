@@ -5,6 +5,10 @@ const commentsController = require("../controllers/comments-controller");
 
 const router = express.Router();
 
+router.get("/:cid", commentsController.getCommentById);
+
+router.get("/user/uid", commentsController.getCommentsByUserId);
+
 router.post(
   "/",
   check("commentText").not().isEmpty(),

@@ -53,12 +53,12 @@ const getNewsById = async (req, res, next) => {
   try {
     news = await News.findById(newsId);
   } catch (err) {
-    const error = new HttpError("Bir sorun oluştu, haber bulunamadı!", 500);
+    const error = new HttpError("Bir sorun oluştu: Haber bulunamadı!", 500);
     return next(error);
   }
 
   if (!news) {
-    return next(new HttpError("Sayfa görüntülenemedi.", 404));
+    return next(new HttpError("Sayfa görüntülenemedi!", 404));
   }
 
   res.json({ news: news.toObject({ getters: true }) });

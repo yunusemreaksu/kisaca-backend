@@ -26,7 +26,7 @@ const getUsers = async (req, res, next) => {
     users = await User.find({}, "email name");
   } catch (err) {
     const error = new HttpError(
-      "Kullanıcı bilgilerini alırken hata oluştu. Lütfen daha sonra tekrar deneyin!",
+      "Kullanıcı bilgileri alınırken hata oluştu. Lütfen daha sonra tekrar deneyin!",
       500
     );
     return next(error);
@@ -40,7 +40,7 @@ const signup = async (req, res, next) => {
     return next(new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422));
   }
 
-  const { name, email, password, comments } = req.body;
+  const { name, email, password } = req.body;
 
   // const hasUser = DUMMY_USERS.find((u) => u.email === email);
   // if (hasUser) {
@@ -74,7 +74,7 @@ const signup = async (req, res, next) => {
     name,
     email,
     password,
-    comments,
+    comments: [],
   });
 
   // DUMMY_USERS.push(createdUser);
@@ -105,7 +105,7 @@ const login = async (req, res, next) => {
     existingUser = await User.findOne({ email: email });
   } catch (err) {
     const error = new HttpError(
-      "Giriş işleminde bir hata oluştu. Lütfen daha sonra tekrar deneyin!",
+      "Giriş işlemi esnasında bir hata oluştu. Lütfen daha sonra tekrar deneyin!",
       500
     );
     return next(error);

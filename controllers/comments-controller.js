@@ -1,38 +1,58 @@
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
+
 const HttpError = require("../models/http-error");
+const Comment = require("../models/comment");
 
 const DUMMY_COMMENTS = [
   {
     id: "c1",
-    user: "u1",
+    creator: "u1",
     commentText: "t1",
     time: "10:52",
   },
   {
     id: "c2",
-    user: "u2",
+    creator: "u2",
     commentText: "t2",
     time: "11:30",
   },
 ];
 
-const createComment = (req, res, next) => {
+const createComment = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422);
+    return next(new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422));
   }
 
-  const { id, user, commentText, time } = req.body;
-  const createdComment = {
-    id: uuidv4(),
-    user: user,
-    commentText: commentText,
-    time: time,
-  };
-  DUMMY_COMMENTS.push(createdComment);
+  const { id, creator, commentText, time } = req.body;
 
-  res.status(201).json({ comment: createdComment });
+  // const createdComment = {
+  //   id: uuidv4(),
+  //   creator: creator,
+  //   commentText: commentText,
+  //   time: time,
+  // };
+
+  const createdComment = new Comment({
+    creator,
+    commentText,
+    time,
+  });
+
+  // DUMMY_COMMENTS.push(createdComment);
+
+  try {
+    await createdComment.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Yorum oluşturulurken bir hata oluştu. Lütfen daha sonra tekrar deneyin!",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ comment: createdComment.toObject({ getters: true }) });
 };
 
 exports.createComment = createComment;

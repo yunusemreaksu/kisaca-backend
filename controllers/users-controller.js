@@ -19,8 +19,19 @@ const DUMMY_USERS = [
   },
 ];
 
-const getUsers = (req, res, next) => {
-  res.json({ users: DUMMY_USERS });
+const getUsers = async (req, res, next) => {
+  // res.json({ users: DUMMY_USERS });
+  let users;
+  try {
+    users = await User.find({}, "email name");
+  } catch (err) {
+    const error = new HttpError(
+      "Kullanıcı bilgilerini alırken hata oluştu. Lütfen daha sonra tekrar deneyin!",
+      500
+    );
+    return next(error);
+  }
+  res.json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
 
 const signup = async (req, res, next) => {

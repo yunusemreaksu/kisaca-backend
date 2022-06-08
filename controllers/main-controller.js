@@ -43,15 +43,25 @@ const createNews = async (req, res, next) => {
   res.status(201).json({ news: createNews });
 };
 
-const getNewsById = (req, res, next) => {
-  const newsId = req.params.nid; //nid: news id
-  const news = DUMMY_NEWS.find((n) => {
-    return n.id === newsId;
-  });
+const getNewsById = async (req, res, next) => {
+  const newsId = req.params.nid; // nid: news id
+  // const news = DUMMY_NEWS.find((n) => {
+  //   return n.id === newsId;
+  // });
+
+  let news;
+  try {
+    news = await News.findById(newsId);
+  } catch (err) {
+    const error = new HttpError("Bir sorun oluştu, haber bulunamadı!", 500);
+    return next(error);
+  }
+
   if (!news) {
     return next(new HttpError("Sayfa görüntülenemedi.", 404));
   }
-  res.json({ news: news });
+
+  res.json({ news: news.toObject({ getters: true }) });
 };
 
 exports.getNewsById = getNewsById;

@@ -10,6 +10,6 @@ const userSchema = new Schema({
   comments: [{ type: mongoose.Types.ObjectId, required: true, ref: "Comment" }],
 });
 
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator); // Daha önce bu email ile hesap oluşturulup oluşturulmadığını kontrol eder
 
 module.exports = mongoose.model("User", userSchema);

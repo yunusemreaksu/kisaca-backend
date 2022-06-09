@@ -1,7 +1,6 @@
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
-
 const News = require("../models/news");
 
 const DUMMY_NEWS = [
@@ -33,7 +32,7 @@ const createNews = async (req, res, next) => {
   });
 
   try {
-    await createdNews.save();
+    await createdNews.save(); // stores new document in database and creates unique id
   } catch (err) {
     const error = new HttpError(
       "Yeni haber oluşturulurken bir hata oluştu!",

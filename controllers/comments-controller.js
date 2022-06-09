@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
+const { default: mongoose } = require("mongoose");
 
 const HttpError = require("../models/http-error");
-
 const Comment = require("../models/comment");
 const User = require("../models/user");
 
@@ -94,8 +94,33 @@ const createComment = async (req, res, next) => {
 
   // DUMMY_COMMENTS.push(createdComment);
 
+  let user;
   try {
-    await createdComment.save(); // stores new document in database and creates unique id
+    user = await User.findById(creator);
+  } catch (err) {
+    const error = new HttpError(
+      "Yorum oluşturulurken bir hata oluştu. Lütfen daha sonra tekrar deneyin!",
+      500
+    );
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError(
+      "Sorgulanan id ile ilişkili bir kullanıcı bulunamadı!",
+      404
+    );
+    return next(error);
+  }
+
+  try {
+    // await createdComment.save(); // stores new document in database and creates unique id
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdComment.save({ session: sess });
+    user.comments.push(createdComment); // Buradaki push() metodu standart js metodu olan değil, mongoose'a ait olan bir metot ve iki model arasında(user<->comment) bağlantı kurmayı sağlıyor. Sadece createdComment id'sini alıp user'daki comments'e ekler.
+    await user.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
       "Yorum oluşturulurken bir hata oluştu. Lütfen daha sonra tekrar deneyin!",

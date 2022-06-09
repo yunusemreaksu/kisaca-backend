@@ -5,6 +5,7 @@ const { default: mongoose } = require("mongoose");
 const HttpError = require("../models/http-error");
 const Comment = require("../models/comment");
 const User = require("../models/user");
+const user = require("../models/user");
 
 const DUMMY_COMMENTS = [
   {
@@ -137,14 +138,28 @@ const deleteComment = async (req, res, next) => {
 
   let comment;
   try {
-    comment = await Comment.findById(commentId);
+    comment = await Comment.findById(commentId).populate("creator"); // populate() metodu, başka bir collection'daki document'e ulaşmayı ve o document'teki data ile çalışmamızı sağlar. Bunu model'lardaki ref'ler sayesinde yapar.
   } catch (err) {
     const error = new HttpError("Bir hata oluştu: Yorum silinemedi!", 500);
     return next(error);
   }
 
+  if (!comment) {
+    const error = new HttpError(
+      "Sorgulanan id ile ilişkili bir yorum bulunamadı!",
+      404
+    );
+    return next(error);
+  }
+
   try {
-    await comment.remove();
+    // await comment.remove();
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await comment.remove({ session: sess });
+    comment.creator.comments.pull(comment); // pull() metodu otomatik olarak ilgili id'yi siler.
+    await comment.creator.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError("Bir hata oluştu: Yorum silinemedi!", 500);
     return next(error);

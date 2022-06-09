@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
+
 const HttpError = require("../models/http-error");
+
 const News = require("../models/news");
 
 const DUMMY_NEWS = [
@@ -25,8 +27,8 @@ const createNews = async (req, res, next) => {
 
   const { date, time, newsText } = req.body;
   const createdNews = new News({
-    date: date,
-    time: time,
+    date: new Date().toLocaleDateString(),
+    time: new Date().toLocaleTimeString(),
     newsText: newsText,
   });
 

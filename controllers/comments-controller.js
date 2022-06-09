@@ -2,7 +2,9 @@ const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
+
 const Comment = require("../models/comment");
+const User = require("../models/user");
 
 const DUMMY_COMMENTS = [
   {
@@ -72,7 +74,7 @@ const createComment = async (req, res, next) => {
     return next(new HttpError("Geçersiz girdi! Lütfen kontrol edin!", 422));
   }
 
-  const { id, creator, commentText, time } = req.body;
+  const { id, creator, commentText, date, time } = req.body;
 
   // const createdComment = {
   //   id: uuidv4(),
@@ -84,6 +86,7 @@ const createComment = async (req, res, next) => {
   const createdComment = new Comment({
     creator,
     commentText,
+    date: new Date().toLocaleDateString(),
     time: new Date().toLocaleTimeString(),
   });
 
@@ -99,7 +102,7 @@ const createComment = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ comment: createdComment.toObject({ getters: true }) });
+  res.status(201).json({ comment: createdComment });
 };
 
 const deleteComment = async (req, res, next) => {

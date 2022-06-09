@@ -4,21 +4,6 @@ const { v4: uuidv4 } = require("uuid");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 
-const DUMMY_USERS = [
-  {
-    id: "u1",
-    name: "john doe",
-    email: "john@test.com",
-    password: "test1",
-  },
-  {
-    id: "u2",
-    name: "jenny doe",
-    email: "jenny@test.com",
-    password: "test2",
-  },
-];
-
 const getUsers = async (req, res, next) => {
   // res.json({ users: DUMMY_USERS });
   let users;
@@ -42,11 +27,6 @@ const signup = async (req, res, next) => {
 
   const { name, email, password } = req.body;
 
-  // const hasUser = DUMMY_USERS.find((u) => u.email === email);
-  // if (hasUser) {
-  //   throw new HttpError("Bu e-mail ile zaten bir hesap oluşturulmuş!", 422);
-  // }
-
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -63,21 +43,12 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  // const createdUser = {
-  //   id: uuidv4(),
-  //   name: name,
-  //   email: email,
-  //   password: password,
-  // };
-
   const createdUser = new User({
     name,
     email,
     password,
     comments: [],
   });
-
-  // DUMMY_USERS.push(createdUser);
 
   try {
     await createdUser.save();
@@ -94,11 +65,6 @@ const signup = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-
-  // const identifiedUser = DUMMY_USERS.find((u) => u.email === email);
-  // if (!identifiedUser || identifiedUser.password !== password) {
-  //   return next(new HttpError("Girilen bilgiler hatalı!", 401));
-  // }
 
   let existingUser;
   try {

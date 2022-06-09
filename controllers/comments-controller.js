@@ -7,21 +7,6 @@ const Comment = require("../models/comment");
 const User = require("../models/user");
 const user = require("../models/user");
 
-const DUMMY_COMMENTS = [
-  {
-    id: "c1",
-    creator: "u1",
-    commentText: "t1",
-    time: "10:52",
-  },
-  {
-    id: "c2",
-    creator: "u2",
-    commentText: "t2",
-    time: "11:30",
-  },
-];
-
 const getCommentById = async (req, res, next) => {
   const commentId = req.params.cid; // cid: comment id
 
@@ -79,21 +64,12 @@ const createComment = async (req, res, next) => {
 
   const { id, creator, commentText, date, time } = req.body;
 
-  // const createdComment = {
-  //   id: uuidv4(),
-  //   creator: creator,
-  //   commentText: commentText,
-  //   time: time,
-  // };
-
   const createdComment = new Comment({
     creator,
     commentText,
     date: new Date().toLocaleDateString(),
     time: new Date().toLocaleTimeString(),
   });
-
-  // DUMMY_COMMENTS.push(createdComment);
 
   let user;
   try {

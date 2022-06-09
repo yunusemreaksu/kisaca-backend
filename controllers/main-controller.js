@@ -3,21 +3,6 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const News = require("../models/news");
 
-const DUMMY_NEWS = [
-  {
-    id: "n1",
-    date: "27.05.2022",
-    time: "15:01",
-    newsText: "Lorem ipsum",
-  },
-  {
-    id: "n2",
-    date: "27.05.2022",
-    time: "16:30",
-    newsText: "Lorem ipsum dolor sit amet",
-  },
-];
-
 const createNews = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -46,9 +31,6 @@ const createNews = async (req, res, next) => {
 
 const getNewsById = async (req, res, next) => {
   const newsId = req.params.nid; // nid: news id
-  // const news = DUMMY_NEWS.find((n) => {
-  //   return n.id === newsId;
-  // });
 
   let news;
   try {

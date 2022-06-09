@@ -28,11 +28,13 @@ const getCommentById = async (req, res, next) => {
   try {
     comment = await Comment.findById(commentId);
   } catch (err) {
+    // GET request'te bir hata olursa
     const error = new HttpError("Bir hata oluştu: Yorum bulunamadı!", 500);
-    return next(error);
+    return next(error); // Bunu eklemezsek error oluşması hâlinde code execution devam eder.
   }
 
   if (!comment) {
+    // Genel hatalar için
     const error = new HttpError(
       "Sorgulanan id ile ilişkili bir yorum bulunamadı!",
       404
@@ -40,7 +42,7 @@ const getCommentById = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ comment: comment.toObject({ getters: true }) });
+  res.json({ comment: comment.toObject({ getters: true }) }); // getters: true -> Mongoose oluşturulan object'e id ekler
 };
 
 const getCommentsByUserId = async (req, res, next) => {
@@ -93,7 +95,7 @@ const createComment = async (req, res, next) => {
   // DUMMY_COMMENTS.push(createdComment);
 
   try {
-    await createdComment.save();
+    await createdComment.save(); // stores new document in database and creates unique id
   } catch (err) {
     const error = new HttpError(
       "Yorum oluşturulurken bir hata oluştu. Lütfen daha sonra tekrar deneyin!",

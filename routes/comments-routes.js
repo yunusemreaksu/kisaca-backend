@@ -15,4 +15,6 @@ router.post(
   commentsController.createComment
 );
 
+router.delete("/:cid", commentsController.deleteComment);
+
 module.exports = router;
